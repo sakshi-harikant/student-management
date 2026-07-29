@@ -36,7 +36,8 @@ A simple and secure full-stack web application designed to manage student regist
 * Eclipse IDE or IntelliJ IDEA
 
 ### 2. Database Setup
-Open MySQL Workbench and create a new database:
+Open **MySQL Workbench** and execute the following SQL command:
+
 ```sql
 CREATE DATABASE student_management;
 
