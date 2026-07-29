@@ -35,7 +35,7 @@ A simple and secure full-stack web application designed to manage student regist
 
 ### Admin-Page
 
-![admin-page](screenshots/admin-page.png)
+![admin-page](screenshots/admin-login.png)
 
 ### Dashboard
 ![Dashboard](screenshots/dash-board.png)
