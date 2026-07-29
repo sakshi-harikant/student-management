@@ -39,7 +39,7 @@ A simple and secure full-stack web application designed to manage student regist
 Open **MySQL Workbench** and execute the following SQL command:
 
 ```sql
-CREATE DATABASE student_management;
+CREATE DATABASE student_management; ````
 
 ### 3. Application Setup
 Navigate to `src/main/resources/application.properties` and configure your database credentials:
