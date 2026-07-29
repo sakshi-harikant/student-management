@@ -13,15 +13,15 @@ A simple and secure full-stack web application designed to manage student regist
 ## ✨ Key Features
 
 * **Student Registration:** Registers students and automatically generates a unique Student ID (e.g., `EG-XXXXX`).
-* **Secure Login:** Encrypts user passwords using **SHA-256** before saving them to the database.
-* **Password Reset:** Allows students to recover their account using their Student ID and email.
+* **Secure Login:** Encrypts user passwords using **SHA-256** before storing them in the database.
+* **Password Reset:** Allows students to recover their account using their Student ID and email address.
 * **Admin Dashboard:** Enables administrators to view and search student profiles in real time.
 
 ---
 
 ## 🛠️ Tech Stack
 
-* **Backend:** Java, Spring Boot (MVC Framework)
+* **Backend:** Java, Spring Boot (MVC)
 * **Frontend:** Thymeleaf, HTML, Tailwind CSS
 * **Database:** MySQL
 * **ORM:** Spring Data JPA (Hibernate)
@@ -31,18 +31,23 @@ A simple and secure full-stack web application designed to manage student regist
 ## 🚀 How to Run the Project
 
 ### 1. Prerequisites
-* Java JDK 17+
-* MySQL Server & MySQL Workbench
+
+* Java JDK 17 or later
+* MySQL Server and MySQL Workbench
 * Eclipse IDE or IntelliJ IDEA
+* Maven
 
 ### 2. Database Setup
+
 Open **MySQL Workbench** and execute the following SQL command:
 
 ```sql
-CREATE DATABASE student_management; ```
+CREATE DATABASE student_management;
+```
 
-### 3. Application Setup
-Navigate to `src/main/resources/application.properties` and configure your database credentials:
+### 3. Configure the Application
+
+Navigate to `src/main/resources/application.properties` and update your MySQL credentials:
 
 ```properties
 # Server Configuration
@@ -59,10 +64,14 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 ```
 
-### 4. Launch Application
+### 4. Run the Application
+
 1. Import the project into **Eclipse** or **IntelliJ IDEA** as an **Existing Maven Project**.
-2. Run `StudentManagementApplication.java` as a **Java Application**.
-3. Open your web browser and navigate to:
+2. Wait for Maven to download all dependencies.
+3. Run `StudentManagementApplication.java` as a **Java Application**.
+4. Open your browser and visit:
 
 ```text
 http://localhost:8080
+```
+
