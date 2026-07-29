@@ -29,11 +29,11 @@ A simple and secure full-stack web application designed to manage student regist
 ---
 ## Screenshots
 
-### Home Page
+### Home-Page
 
 ![Home Page](screenshots/home-page.png)
 
-### Admin-Page
+### Admin-Login
 
 ![admin-page](screenshots/admin-login.png)
 
