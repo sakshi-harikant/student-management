@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studora - Student Management System</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --pistachio-primary: #D8F3DC;
+            --pistachio-secondary: #B7EFC5;
+            --pistachio-dark: #95D5B2;
+            --forest-green: #40916C;
+            --forest-dark: #2D6A4F;
+            --forest-deeper: #1B4332;
+            --bg-soft: #F7FFF8;
+            --card-shadow: 0 4px 20px rgba(64, 145, 108, 0.08);
+            --card-hover-shadow: 0 12px 40px rgba(64, 145, 108, 0.15);
+        }
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-soft);
+            color: #1a1a1a;
+        }
+        
+        /* ===== NAVBAR ===== */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 1px 30px rgba(0, 0, 0, 0.04);
+            padding: 0.6rem 0;
+            border-bottom: 2px solid rgba(216, 243, 220, 0.4);
+        }
+        
+        .navbar-brand {
+            font-weight: 900;
+            font-size: 1.6rem;
+            color: var(--forest-dark) !important;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--pistachio-primary), var(--pistachio-secondary));
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo-wrapper:hover {
+            transform: scale(1.05) rotate(-3deg);
+        }
+        
+        .logo-wrapper .logo-icon {
+            font-size: 1.4rem;
+            color: var(--forest-deeper);
+        }
+        
+        .logo-wrapper .logo-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--forest-green);
+            border-radius: 50%;
+            bottom: 6px;
+            right: 6px;
+            border: 2px solid white;
+        }
+        
+        .brand-text {
+            background: linear-gradient(135deg, var(--forest-dark), var(--forest-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: #4a4a4a !important;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem !important;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+        
+        .nav-link:hover {
+            color: var(--forest-green) !important;
+            background: rgba(216, 243, 220, 0.5);
+        }
+        
+        .nav-link.active {
+            color: #4a4a4a !important;
+            background: transparent !important;
+        }
+        
+        .btn-outline-forest {
+            color: var(--forest-green);
+            border: 2px solid var(--forest-green);
+            border-radius: 12px;
+            padding: 0.45rem 1.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+        
+        .btn-outline-forest:hover {
+            background: var(--forest-green);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(64, 145, 108, 0.25);
+        }
+        
+        .btn-forest {
+            background: var(--forest-green);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0.45rem 1.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-forest:hover {
+            background: var(--forest-dark);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(64, 145, 108, 0.3);
+        }
+        
+        /* ===== HERO ===== */
+        .hero-section {
+            padding: 3rem 0 2rem 0;
+            min-height: 75vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hero-badge {
+            background: var(--pistachio-primary);
+            color: var(--forest-dark);
+            padding: 0.35rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(64, 145, 108, 0.1);
+        }
+        
+        .hero-badge i {
+            margin-right: 6px;
+            color: var(--forest-green);
+        }
+        
+        .hero-title {
+            font-weight: 900;
+            font-size: 3.8rem;
+            line-height: 1.05;
+            color: var(--forest-deeper);
+            margin-bottom: 1.2rem;
+        }
+        
+        .hero-title .highlight {
+            background: linear-gradient(135deg, var(--forest-green), var(--forest-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+        
+        .hero-title .highlight-underline {
+            position: relative;
+        }
+        
+        .hero-title .highlight-underline::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: var(--pistachio-primary);
+            opacity: 0.5;
+            border-radius: 4px;
+            z-index: -1;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: #5a6a5a;
+            line-height: 1.8;
+            max-width: 480px;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-hero-primary {
+            background: linear-gradient(135deg, var(--forest-green), var(--forest-dark));
+            color: white;
+            padding: 0.85rem 2.8rem;
+            border-radius: 14px;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(64, 145, 108, 0.25);
+        }
+        
+        .btn-hero-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(64, 145, 108, 0.35);
+            color: white;
+        }
+        
+        .btn-hero-primary i {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn-hero-primary:hover i {
+            transform: translateX(5px);
+        }
+        
+        .btn-hero-secondary {
+            background: white;
+            color: var(--forest-green);
+            padding: 0.85rem 2.8rem;
+            border-radius: 14px;
+            font-weight: 600;
+            border: 2px solid var(--pistachio-primary);
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+        }
+        
+        .btn-hero-secondary:hover {
+            background: var(--pistachio-primary);
+            border-color: var(--forest-green);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(64, 145, 108, 0.12);
+            color: var(--forest-dark);
+        }
+        
+        .hero-tags {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .hero-tags span {
+            color: #6a7a6a;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .hero-tags span i {
+            color: var(--forest-green);
+            margin-right: 6px;
+        }
+        
+        /* ===== RIGHT SIDE - LARGE IMAGE (INVISIBLE EDGES) ===== */
+        .hero-illustration {
+            position: relative;
+            padding: 0;
+            height: 100%;
+            min-height: 450px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hero-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 420px;
+            overflow: hidden;
+            background: transparent;
+        }
+        
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            min-height: 420px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        /* ===== FEATURES ===== */
+        .features-section {
+            padding: 4rem 0 3rem 0;
+            background: white;
+            border-top: 1px solid rgba(216, 243, 220, 0.4);
+        }
+        
+        .section-tag {
+            color: var(--forest-green);
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: inline-block;
+            background: var(--pistachio-primary);
+            padding: 0.3rem 1.2rem;
+            border-radius: 50px;
+        }
+        
+        .section-title {
+            font-weight: 800;
+            font-size: 2.4rem;
+            color: var(--forest-deeper);
+            margin-bottom: 0.8rem;
+            letter-spacing: -0.5px;
+        }
+        
+        .section-subtitle {
+            color: #6a7a6a;
+            font-size: 1.05rem;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem 1.8rem;
+            border: 1px solid rgba(216, 243, 220, 0.3);
+            transition: all 0.3s ease;
+            height: 100%;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--card-hover-shadow);
+            border-color: var(--pistachio-secondary);
+        }
+        
+        .feature-icon-lg {
+            width: 56px;
+            height: 56px;
+            background: var(--pistachio-primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: var(--forest-green);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-icon-lg {
+            background: var(--forest-green);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .feature-card h5 {
+            font-weight: 700;
+            color: var(--forest-deeper);
+            margin-bottom: 0.6rem;
+            font-size: 1.1rem;
+        }
+        
+        .feature-card p {
+            color: #6a7a6a;
+            font-size: 0.92rem;
+            line-height: 1.7;
+            margin-bottom: 0;
+        }
+        
+        /* ===== FOOTER ===== */
+        .footer-custom {
+            background: white;
+            border-top: 1px solid rgba(216, 243, 220, 0.4);
+            padding: 1.8rem 0;
+        }
+        
+        .footer-custom .footer-text {
+            color: #8a9a8a;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .footer-custom .footer-text i {
+            color: var(--forest-green);
+        }
+        
+        .footer-links a {
+            color: #8a9a8a;
+            text-decoration: none;
+            font-size: 1rem;
+            margin: 0 0.6rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg-soft);
+            line-height: 36px;
+            text-align: center;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            background: var(--forest-green);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(64, 145, 108, 0.2);
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-image-wrapper,
+            .hero-image {
+                min-height: 360px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.4rem;
+            }
+            
+            .hero-section {
+                min-height: auto;
+                padding: 2rem 0;
+            }
+            
+            .hero-image-wrapper,
+            .hero-image {
+                min-height: 300px;
+                margin-top: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .hero-tags {
+                flex-wrap: wrap;
+                gap: 0.8rem;
+            }
+            
+            .navbar-brand {
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .btn-hero-primary,
+            .btn-hero-secondary {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+                margin-bottom: 0.6rem;
+            }
+            
+            .btn-hero-secondary {
+                margin-bottom: 0;
+            }
+            
+            .logo-wrapper {
+                width: 36px;
+                height: 36px;
+            }
+            
+            .logo-wrapper .logo-icon {
+                font-size: 1.1rem;
+            }
+            
+            .brand-text {
+                font-size: 1.2rem;
+            }
+            
+            .hero-image-wrapper,
+            .hero-image {
+                min-height: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">
+                <div class="logo-wrapper">
+                    <i class="fas fa-book-open logo-icon"></i>
+                    <span class="logo-dot"></span>
+                </div>
+                <span class="brand-text">Studora</span>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-forest" th:href="@{/student/login}">
+                            <i class="fas fa-sign-in-alt me-2"></i>Student Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-forest" th:href="@{/admin/login}">
+                            <i class="fas fa-user-shield me-2"></i>Admin
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- ===== HERO SECTION ===== -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <!-- Left Side - Text Content -->
+                <div class="col-lg-6">
+                    <span class="hero-badge">
+                        <i class="fas fa-sparkles"></i> Next-Gen College ERP
+                    </span>
+                    <h1 class="hero-title">
+                        Manage your<br>
+                        <span class="highlight-underline">academic journey</span><br>
+                        in <span class="highlight">one clean space</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Welcome to the central Studora Student Information System. 
+                        Register, maintain your student profile, and stay updated with 
+                        your department records effortlessly.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a th:href="@{/register}" class="btn-hero-primary">
+                            Get Started <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a th:href="@{/student/login}" class="btn-hero-secondary">
+                            <i class="fas fa-user me-2"></i>Sign In
+                        </a>
+                    </div>
+                    <div class="hero-tags">
+                        <span><i class="fas fa-check-circle"></i>Secure</span>
+                        <span><i class="fas fa-check-circle"></i>Real-time</span>
+                        <span><i class="fas fa-check-circle"></i>Verified</span>
+                    </div>
+                </div>
+                
+                <!-- Right Side - Large Image (Invisible Edges) -->
+                <div class="col-lg-6">
+                    <div class="hero-illustration">
+                        <div class="hero-image-wrapper">
+                            
+                            <!-- ========================================= -->
+                            <!-- YOUR IMAGE GOES HERE -->
+                            <!-- Replace "your-image-name.jpg" with your actual filename -->
+                            <!-- ========================================= -->
+                            <img 
+                                src="/images/studora.png" 
+                                alt="Student Management System" 
+                                class="hero-image"
+                                th:src="@{/images/studora.png}"
+                            >
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ===== FEATURES SECTION ===== -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="section-tag"><i class="fas fa-sparkles me-2"></i>Why Choose Studora</span>
+                <h2 class="section-title">Everything you need<br>to manage student records</h2>
+                <p class="section-subtitle">
+                    A comprehensive student management system built for modern educational institutions.
+                </p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon-lg"><i class="fas fa-user-plus"></i></div>
+                        <h5>Easy Registration</h5>
+                        <p>Quick and unified onboarding process for fresh students into department streams with automated ID generation.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon-lg"><i class="fas fa-sliders-h"></i></div>
+                        <h5>Profile Autonomy</h5>
+                        <p>Keep your personal, contact, and administrative details safely up-to-date with full control over your information.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon-lg"><i class="fas fa-server"></i></div>
+                        <h5>Robust Administration</h5>
+                        <p>Full student lifecycle control from real-time records to flexible modifications and comprehensive reporting.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <span class="footer-text">
+                        <i class="fas fa-book-open me-2"></i>
+                        &copy; 2026 Studora. All rights reserved.
+                    </span>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

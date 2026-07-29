@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration - Studora</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --pistachio-primary: #D8F3DC;
+            --pistachio-secondary: #B7EFC5;
+            --forest-green: #40916C;
+            --forest-dark: #2D6A4F;
+            --forest-deeper: #1B4332;
+            --bg-soft: #F7FFF8;
+        }
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-soft);
+            color: #1a1a1a;
+            min-height: 100vh;
+        }
+        
+        /* ===== NAVBAR ===== */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 1px 30px rgba(0, 0, 0, 0.04);
+            padding: 0.6rem 0;
+            border-bottom: 2px solid rgba(216, 243, 220, 0.4);
+        }
+        
+        .navbar-brand {
+            font-weight: 900;
+            font-size: 1.6rem;
+            color: var(--forest-dark) !important;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--pistachio-primary), var(--pistachio-secondary));
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo-wrapper:hover {
+            transform: scale(1.05) rotate(-3deg);
+        }
+        
+        .logo-wrapper .logo-icon {
+            font-size: 1.4rem;
+            color: var(--forest-deeper);
+        }
+        
+        .logo-wrapper .logo-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--forest-green);
+            border-radius: 50%;
+            bottom: 6px;
+            right: 6px;
+            border: 2px solid white;
+        }
+        
+        .brand-text {
+            background: linear-gradient(135deg, var(--forest-dark), var(--forest-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: #4a4a4a !important;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem !important;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+        
+        .nav-link:hover {
+            color: var(--forest-green) !important;
+            background: rgba(216, 243, 220, 0.5);
+        }
+        
+        /* ===== REGISTRATION FORM ===== */
+        .register-section {
+            padding: 2rem 0 3rem 0;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+        }
+        
+        .register-card {
+            background: white;
+            border-radius: 28px;
+            padding: 2.5rem 2.5rem;
+            box-shadow: 0 8px 50px rgba(64, 145, 108, 0.08);
+            border: 1px solid rgba(216, 243, 220, 0.3);
+            max-width: 850px;
+            margin: 0 auto;
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .register-header .header-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--pistachio-primary), var(--pistachio-secondary));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.8rem;
+            color: var(--forest-green);
+        }
+        
+        .register-header h2 {
+            font-weight: 800;
+            color: var(--forest-deeper);
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .register-header p {
+            color: #7a8a7a;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        
+        .alert-error {
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-section {
+            margin-bottom: 1.8rem;
+        }
+        
+        .form-section-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--forest-green);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(216, 243, 220, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-section-title i {
+            font-size: 0.9rem;
+        }
+        
+        .form-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #4a5a4a;
+            margin-bottom: 0.3rem;
+        }
+        
+        .form-label .required {
+            color: #e74c3c;
+            margin-left: 2px;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 2px solid #e8f0e8;
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            background: var(--bg-soft);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--forest-green);
+            box-shadow: 0 0 0 4px rgba(64, 145, 108, 0.1);
+            background: white;
+        }
+        
+        .form-control:hover, .form-select:hover {
+            border-color: var(--pistachio-secondary);
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 70px;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, var(--forest-green), var(--forest-dark));
+            color: white;
+            padding: 0.8rem 2.5rem;
+            border-radius: 14px;
+            font-weight: 700;
+            border: none;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            width: 100%;
+            box-shadow: 0 4px 20px rgba(64, 145, 108, 0.25);
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 35px rgba(64, 145, 108, 0.35);
+            color: white;
+        }
+        
+        .btn-submit i {
+            margin-right: 10px;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #6a7a6a;
+        }
+        
+        .login-link a {
+            color: var(--forest-green);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .login-link a:hover {
+            color: var(--forest-dark);
+            text-decoration: underline;
+        }
+        
+        .invalid-feedback {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #dc3545;
+            margin-top: 0.25rem;
+        }
+        
+        @media (max-width: 768px) {
+            .register-card { padding: 1.5rem; border-radius: 20px; }
+            .register-header h2 { font-size: 1.5rem; }
+            .register-header .header-icon { width: 50px; height: 50px; font-size: 1.4rem; }
+            .navbar-brand { font-size: 1.3rem; }
+            .logo-wrapper { width: 36px; height: 36px; }
+            .logo-wrapper .logo-icon { font-size: 1.1rem; }
+        }
+        
+        @media (max-width: 576px) {
+            .register-card { padding: 1.2rem; border-radius: 16px; }
+            .register-header h2 { font-size: 1.3rem; }
+            .register-header p { font-size: 0.8rem; }
+            .form-control, .form-select { font-size: 0.85rem; padding: 0.5rem 0.8rem; }
+            .form-label { font-size: 0.75rem; }
+            .btn-submit { font-size: 0.9rem; padding: 0.7rem 1.5rem; }
+            .brand-text { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">
+                <div class="logo-wrapper">
+                    <i class="fas fa-book-open logo-icon"></i>
+                    <span class="logo-dot"></span>
+                </div>
+                <span class="brand-text">Studora</span>
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/student/login}">Student Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="register-section">
+        <div class="container">
+            <div class="register-card">
+                
+                <div class="register-header">
+                    <div class="header-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h2>Create Student Profile</h2>
+                    <p>Fill out the form below to register as a new student</p>
+                </div>
+                
+                <div th:if="${error}" class="alert-error">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <span th:text="${error}">Registration failed. Please try again.</span>
+                </div>
+                
+                <form th:action="@{/register}" method="POST" class="needs-validation" novalidate>
+                    
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="fas fa-user"></i> Personal Records
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Full Name <span class="required">*</span></label>
+                                <input type="text" name="fullName" class="form-control" placeholder="John Doe" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Date of Birth <span class="required">*</span></label>
+                                <input type="date" name="dob" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Gender <span class="required">*</span></label>
+                                <select name="gender" class="form-select" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email Address <span class="required">*</span></label>
+                                <input type="email" name="email" class="form-control" placeholder="john@university.edu" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="fas fa-graduation-cap"></i> Academic & Core Allocation
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number <span class="required">*</span></label>
+                                <input type="tel" name="phone" pattern="[0-9]{10}" class="form-control" placeholder="10-digit phone number" required>
+                                <div class="invalid-feedback">Please enter a valid 10-digit phone number.</div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Course / Degree <span class="required">*</span></label>
+                                <select id="courseSelect" name="course" class="form-select" onchange="updateDepartment()" required>
+                                    <option value="">Select Course</option>
+                                    <option value="BCA">BCA</option>
+                                    <option value="MCA">MCA</option>
+                                    <option value="BBA">BBA</option>
+                                    <option value="MBA">MBA</option>
+                                    <option value="BCom">BCom</option>
+                                    <option value="MCom">MCom</option>
+                                </select>
+                                <div class="invalid-feedback">Please select a course program.</div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label">Department <span class="required">*</span></label>
+                                <select id="departmentSelect" name="department" class="form-select" required>
+                                    <option value="">Choose a course first</option>
+                                </select>
+                                <div class="invalid-feedback">Please select a corresponding department framework.</div>
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <label class="form-label">Residential Address <span class="required">*</span></label>
+                                <textarea name="address" class="form-control" rows="2" placeholder="Street, City, State, Zip Code" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <i class="fas fa-lock"></i> Portal Authorization Security
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Username <span class="required">*</span></label>
+                                <input type="text" name="username" class="form-control" placeholder="Choose a unique username" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Password <span class="required">*</span></label>
+                                <input type="password" name="password" pattern="(?=.*\d)(?=.*[A-Z]).{8,}" class="form-control" placeholder="Create a strong password" required>
+                                <div class="form-text text-muted mt-1" style="font-size: 11px;">
+                                    Must contain at least 8 characters, 1 uppercase letter, and 1 number.
+                                </div>
+                                <div class="invalid-feedback">
+                                    Password must be at least 8 characters long and include an uppercase letter and a number.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-paper-plane"></i> Register Student
+                    </button>
+                    
+                </form>
+                
+                <div class="login-link">
+                    Already have an account? <a th:href="@{/student/login}">Sign in here</a>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <span class="footer-text">
+                        <i class="fas fa-book-open me-2"></i>
+                        &copy; 2026 Studora. All rights reserved.
+                    </span>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="footer-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // 🆕 Synchronized dropdown mapping engine
+        function updateDepartment() {
+            const courseSelect = document.getElementById("courseSelect");
+            const deptSelect = document.getElementById("departmentSelect");
+            const selectedCourse = courseSelect.value;
+            
+            // Clear current items inside options
+            deptSelect.innerHTML = "";
+            
+            let recommendedDept = "";
+            
+            if (selectedCourse === "BCA" || selectedCourse === "MCA") {
+                recommendedDept = "Information Technology & Computer Science";
+            } else if (selectedCourse === "BBA" || selectedCourse === "MBA") {
+                recommendedDept = "Management Studies";
+            } else if (selectedCourse === "BCom" || selectedCourse === "MCom") {
+                recommendedDept = "Commerce";
+            }
+            
+            if (recommendedDept) {
+                // Populate correct department choice matching backend models
+                const opt = document.createElement("option");
+                opt.value = recommendedDept;
+                opt.textContent = recommendedDept;
+                deptSelect.appendChild(opt);
+            } else {
+                const defaultOpt = document.createElement("option");
+                defaultOpt.value = "";
+                defaultOpt.textContent = "Choose a course first";
+                deptSelect.appendChild(defaultOpt);
+            }
+        }
+
+        // Form Submission validation framework interceptor
+        (() => {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+</body>
+</html>

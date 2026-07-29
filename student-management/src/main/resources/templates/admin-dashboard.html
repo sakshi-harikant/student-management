@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studora Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FCFA; }
+        .bg-studora-sidebar { background-color: #1E4D38; }
+        .logo-wrapper { display: inline-flex; position: relative; color: #FFFFFF; }
+        .logo-icon { font-size: 1.5rem; }
+        .logo-dot { position: absolute; bottom: 0; right: -2px; width: 6px; height: 6px; background-color: #40916C; border-radius: 50%; }
+    </style>
+</head>
+<body class="min-h-screen flex text-gray-800">
+
+    <aside class="w-20 md:w-64 bg-studora-sidebar text-white flex flex-col items-center md:items-start py-6 px-4 gap-8">
+        <div class="flex items-center gap-3 px-2">
+            <div class="logo-wrapper">
+                <i class="fas fa-book-open logo-icon"></i>
+                <span class="logo-dot"></span>
+            </div>
+            <span class="brand-text text-xl font-bold tracking-tight hidden md:inline">Studora</span>
+        </div>
+
+      <nav class="flex-1 w-full space-y-2">
+            <a th:href="@{/admin/dashboard}" 
+               class="flex items-center gap-4 px-4 py-3 text-emerald-100 hover:bg-white/10 rounded-xl transition"
+               th:classappend="${activeTab == 'dashboard'} ? 'bg-white/10 text-white font-medium' : ''">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <span class="font-medium text-sm hidden md:inline">Dashboard</span>
+            </a>
+            
+            <a th:href="@{/admin/departments}" 
+               class="flex items-center gap-4 px-4 py-3 text-emerald-100 hover:bg-white/10 rounded-xl transition"
+               th:classappend="${activeTab == 'departments'} ? 'bg-white/10 text-white font-medium' : ''">
+                <i data-lucide="layers" class="w-5 h-5"></i>
+                <span class="font-medium text-sm hidden md:inline">Departments</span>
+            </a>
+            
+            <a th:href="@{/admin/logout}" class="flex items-center gap-4 px-4 py-3 text-emerald-100 hover:bg-rose-900/30 rounded-xl transition mt-auto">
+                <i data-lucide="log-out" class="w-5 h-5"></i>
+                <span class="font-medium text-sm hidden md:inline">Sign Out</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 p-6 md:p-10 max-w-7xl mx-auto w-full overflow-y-auto">
+        
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Studora Dashboard</h1>
+                <p class="text-gray-500 text-sm mt-1">Welcome back, Administrator!</p>
+            </div>
+            
+            <div class="flex items-center gap-4 relative">
+                <div class="relative flex items-center">
+                    <i data-lucide="search" class="w-5 h-5 text-gray-400 absolute left-3.5 pointer-events-none"></i>
+                    <input type="text" id="studentSearchInput" onkeyup="filterStudentTable()" placeholder="Search students..." class="w-48 md:w-64 pl-11 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600 transition shadow-sm">
+                </div>
+
+                <div class="relative">
+                    <button onclick="toggleNotificationBox()" class="p-2.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 text-gray-600 transition shadow-sm relative">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <span id="alertDot" th:if="${newRegistrationsCount > 0}" class="absolute top-2 right-2 w-2 h-2 bg-emerald-500 rounded-full"></span>
+                    </button>
+
+                    <div id="notificationDropdown" class="hidden absolute right-0 mt-3 w-80 md:w-[420px] bg-white border border-gray-100 shadow-xl rounded-2xl overflow-hidden z-50">
+                        <div class="px-5 py-4 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
+                            <span class="font-bold text-sm text-gray-900 tracking-tight">Alert Center Notifications</span>
+                            <span class="text-xs bg-emerald-50 text-emerald-700 font-bold px-2.5 py-1 rounded-lg" id="notifCount" th:text="${newRegistrationsCount + ' New'}">0 New</span>
+                        </div>
+                        <div class="divide-y divide-gray-50 max-h-96 overflow-y-auto" id="notificationList">
+                            
+                            <div th:each="reg : ${recentRegistrations}" class="p-5 hover:bg-gray-50/40 transition flex items-start gap-4">
+                                <div class="bg-emerald-50 p-2.5 h-10 w-10 rounded-xl text-emerald-600 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="user-plus" class="w-5 h-5"></i>
+                                </div>
+                                
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm text-gray-700 font-medium leading-relaxed">
+                                        <span class="font-bold text-gray-900 block md:inline" th:text="${reg.fullName}">Student Name</span> 
+                                        newly registered under <span class="font-semibold text-emerald-700 whitespace-nowrap" th:text="${reg.department}">Department</span>.
+                                    </p>
+                                    <div class="flex items-center gap-3 mt-2">
+                                        <span class="text-xs font-mono text-gray-400 bg-gray-50 px-2 py-0.5 rounded border border-gray-100" th:text="${reg.studentId}">EG-XXXX</span>
+                                        <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold tracking-wider uppercase px-2 py-0.5 rounded-md">New Entry</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div th:if="${recentRegistrations == null || recentRegistrations.isEmpty()}" id="emptyNotifRow" class="p-8 text-center text-gray-400 text-sm">
+                                <i data-lucide="bell-off" class="w-8 h-8 mx-auto mb-2 text-gray-300"></i>
+                                No new registration alerts available.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Students</span>
+                    <h3 class="text-3xl font-bold text-gray-900 mt-1" th:text="${totalStudentsCount}">0</h3>
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-xl text-emerald-600"><i data-lucide="users" class="w-6 h-6"></i></div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Active Students</span>
+                    <h3 class="text-3xl font-bold text-gray-900 mt-1" th:text="${activeStudentsCount}">0</h3>
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-xl text-emerald-600"><i data-lucide="user-check" class="w-6 h-6"></i></div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">New Registrations</span>
+                    <h3 class="text-3xl font-bold text-gray-900 mt-1" th:text="${newRegistrationsCount}">0</h3>
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-xl text-emerald-600"><i data-lucide="user-plus" class="w-6 h-6"></i></div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Departments</span>
+                    <h3 class="text-3xl font-bold text-gray-900 mt-1" th:text="${departmentsCount}">0</h3>
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-xl text-emerald-600"><i data-lucide="layers" class="w-6 h-6"></i></div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+            <div class="px-6 py-5 border-b border-gray-50 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-gray-900">Recent Students</h2>
+                <span class="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2.5 py-1 rounded-lg">Live Table Rows</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse" id="studentTable">
+                    <thead>
+                        <tr class="bg-gray-50/70 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                            <th class="px-6 py-4">Name</th>
+                            <th class="px-6 py-4">Department</th>
+                            <th class="px-6 py-4">Course Degree</th>
+                            <th class="px-6 py-4">Student ID</th>
+                            <th class="px-6 py-4 text-center">Status</th>
+                            <th class="px-6 py-4 text-center">Management Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50 text-sm text-gray-700">
+                        <tr th:each="student : ${students}" class="student-row hover:bg-gray-50/40 transition">
+                            <td class="px-6 py-4 font-medium text-gray-900 name-cell" th:text="${student.fullName}">Full Name</td>
+                            <td class="px-6 py-4 font-semibold text-gray-600 dept-cell" th:text="${student.department}">Department Name</td>
+                            <td class="px-6 py-4 text-gray-500" th:text="${student.course}">Course Stream</td>
+                            <td class="px-6 py-4 font-mono text-xs text-gray-600 id-cell" th:text="${student.studentId}">EG-XXXXX</td>
+                            <td class="px-6 py-4 text-center whitespace-nowrap">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100" th:text="${student.status}">
+                                    Active
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center whitespace-nowrap space-x-2">
+                                <a th:href="@{'/admin/student/edit/' + ${student.id}}" class="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-1.5 rounded-lg border border-blue-100 hover:bg-blue-100 transition">
+                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Edit
+                                </a>
+                                <a th:href="@{'/admin/student/delete/' + ${student.id}}" onclick="return confirm('Are you sure you want to remove this profile record?');" class="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 bg-rose-50 px-2.5 py-1.5 rounded-lg border border-rose-100 hover:bg-rose-100 transition">
+                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${students.isEmpty()}">
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-400">No student records found inside table.</td>
+                        </tr>
+                        <tr id="noResultsRow" class="hidden">
+                            <td colspan="6" class="px-6 py-12 text-center text-gray-400">No matching student records found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // Real-Time Student Grid Search Filter Engine
+        function filterStudentTable() {
+            const input = document.getElementById("studentSearchInput");
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById("studentTable");
+            const tr = table.getElementsByClassName("student-row");
+            let matchesFound = false;
+
+            for (let i = 0; i < tr.length; i++) {
+                const nameText = tr[i].querySelector(".name-cell")?.textContent || "";
+                const deptText = tr[i].querySelector(".dept-cell")?.textContent || "";
+                const idText = tr[i].querySelector(".id-cell")?.textContent || "";
+                
+                if (
+                    nameText.toLowerCase().indexOf(filter) > -1 || 
+                    deptText.toLowerCase().indexOf(filter) > -1 ||
+                    idText.toLowerCase().indexOf(filter) > -1
+                ) {
+                    tr[i].style.display = "";
+                    matchesFound = true;
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+
+            const noResultsRow = document.getElementById("noResultsRow");
+            if (tr.length > 0) {
+                noResultsRow.style.display = matchesFound ? "none" : "";
+            }
+        }
+
+        // Dropdown Visibility Overlay Controls
+        function toggleNotificationBox() {
+            const dropdown = document.getElementById("notificationDropdown");
+            const alertDot = document.getElementById("alertDot");
+            const notifCount = document.getElementById("notifCount");
+            
+            dropdown.classList.toggle("hidden");
+            
+            if (!dropdown.classList.contains("hidden")) {
+                if (alertDot) alertDot.style.display = 'none';
+                if (notifCount) {
+                    notifCount.textContent = "0 New";
+                    notifCount.className = "text-xs bg-gray-100 text-gray-500 font-semibold px-2 py-0.5 rounded";
+                }
+            }
+        }
+
+        // Close Popovers on Out-of-bounds Page Body Interactions
+        window.addEventListener('click', function(e) {
+            const dropdown = document.getElementById("notificationDropdown");
+            const button = dropdown?.previousElementSibling;
+            if (dropdown && !dropdown.contains(e.target) && button && !button.contains(e.target)) {
+                dropdown.classList.add("hidden");
+            }
+        });
+    </script>
+</body>
+</html>

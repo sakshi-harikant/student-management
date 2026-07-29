@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Studora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FFF8; }
+        .bg-pistachio-100 { background-color: #D8F3DC; }
+        .text-forest { color: #2D6A4F; }
+        .bg-forest { background-color: #40916C; }
+    </style>
+</head>
+<body class="text-gray-800 min-h-screen flex flex-col">
+
+    <nav class="bg-white shadow-sm border-b border-gray-100 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <div class="bg-forest p-2 rounded-lg text-white">
+                <i data-lucide="book-open"></i>
+            </div>
+            <span class="text-xl font-bold text-forest tracking-tight">Studora</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="text-sm font-medium text-gray-600">Welcome, <strong class="text-gray-900" th:text="${student.fullName}">Student</strong></span>
+            <a th:href="@{/student/login}" class="text-xs bg-red-50 text-red-600 border border-red-100 px-3 py-1.5 rounded-xl font-semibold hover:bg-red-100 transition">Log Out</a>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-6xl w-full mx-auto px-6 py-10 grid md:grid-cols-3 gap-6">
+        
+        <div class="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm flex flex-col items-center text-center h-fit">
+            <div class="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center text-forest text-3xl font-bold mb-4" th:text="${#strings.substring(student.fullName,0,1)}">S</div>
+            <h2 class="text-xl font-bold text-gray-900" th:text="${student.fullName}">Student Name</h2>
+            <p class="text-sm text-forest font-semibold mt-1 bg-pistachio-100 px-3 py-0.5 rounded-full" th:text="${student.studentId}">EG-XXXXX</p>
+            
+            <div class="w-full border-t border-gray-100 mt-6 pt-4 space-y-3 text-left text-sm">
+                <div class="flex justify-between"><span class="text-gray-500">System Status:</span> <span class="font-semibold text-green-600" th:text="${student.status}">Active</span></div>
+                <div class="flex justify-between"><span class="text-gray-500">Role:</span> <span class="font-semibold text-gray-700" th:text="${student.role}">STUDENT</span></div>
+                <div class="flex justify-between"><span class="text-gray-500">Username:</span> <span class="font-semibold text-gray-700" th:text="${student.username}">username</span></div>
+            </div>
+
+            <button onclick="toggleModal(true)" class="w-full mt-6 bg-forest text-white text-sm font-semibold py-2.5 rounded-xl hover:bg-emerald-700 shadow-sm transition flex items-center justify-center gap-2">
+                <i data-lucide="edit-2" class="w-4 h-4"></i> Edit Profile Details
+            </button>
+        </div>
+
+        <div class="md:col-span-2 space-y-6">
+            <div class="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2 text-forest"><i data-lucide="book-open" class="w-5 h-5"></i> Academic Allocations</h3>
+                <div class="grid sm:grid-cols-2 gap-4 text-sm">
+                    <div class="bg-[#F8FFF8] p-4 rounded-2xl border border-gray-50">
+                        <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Department Stream</p>
+                        <p class="text-base font-bold text-gray-800 mt-1" th:text="${student.department}">Computer Science</p>
+                    </div>
+                    <div class="bg-[#F8FFF8] p-4 rounded-2xl border border-gray-50">
+                        <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Course Specialized Degree</p>
+                        <p class="text-base font-bold text-gray-800 mt-1" th:text="${student.course}">B.Tech</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
+                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2 text-forest"><i data-lucide="file-text" class="w-5 h-5"></i> Personal & Registry Records</h3>
+                <div class="grid sm:grid-cols-2 gap-4 text-sm">
+                    <div><span class="text-gray-500 block">Email Address:</span> <span class="font-semibold text-gray-800" th:text="${student.email}">email@domain.com</span></div>
+                    <div><span class="text-gray-500 block">Phone Number:</span> <span class="font-semibold text-gray-800" th:text="${student.phone}">1234567890</span></div>
+                    <div><span class="text-gray-500 block">Date of Birth:</span> <span class="font-semibold text-gray-800" th:text="${student.dob}">2000-01-01</span></div>
+                    <div><span class="text-gray-500 block">Gender Orientation:</span> <span class="font-semibold text-gray-800" th:text="${student.gender}">Male</span></div>
+                    <div class="sm:col-span-2 border-t border-gray-50 pt-3 mt-1"><span class="text-gray-500 block">Residential Address:</span> <p class="font-semibold text-gray-800 mt-0.5" th:text="${student.address}">Address Details</p></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="editModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-xl border border-gray-100 animate-in fade-in zoom-in-95 duration-150">
+            <div class="flex justify-between items-center pb-4 border-b border-gray-50 mb-4">
+                <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2 text-forest"><i data-lucide="user-cog"></i> Update Personal Metrics</h3>
+                <button onclick="toggleModal(false)" class="text-gray-400 hover:text-gray-600"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            
+            <form th:action="@{/student/profile/update}" method="POST" class="space-y-4 text-sm">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 mb-1">Email Address</label>
+                    <input type="email" name="email" th:value="${student.email}" required class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-emerald-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 mb-1">Phone Number</label>
+                    <input type="text" name="phone" th:value="${student.phone}" required class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-emerald-600">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1">Birth Date</label>
+                        <input type="date" name="dob" th:value="${student.dob}" required class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-emerald-600">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1">Gender</label>
+                        <select name="gender" class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-emerald-600">
+                            <option value="Male" th:selected="${student.gender == 'Male'}">Male</option>
+                            <option value="Female" th:selected="${student.gender == 'Female'}">Female</option>
+                            <option value="Other" th:selected="${student.gender == 'Other'}">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 mb-1">Location / Address</label>
+                    <textarea name="address" th:text="${student.address}" rows="2" required class="w-full px-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-emerald-600"></textarea>
+                </div>
+                
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="toggleModal(false)" class="flex-1 border border-gray-200 text-gray-600 py-2.5 rounded-xl font-medium hover:bg-gray-50 transition">Cancel</button>
+                    <button type="submit" class="flex-1 bg-forest text-white py-2.5 rounded-xl font-medium hover:bg-emerald-700 transition shadow-sm">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="bg-white border-t border-gray-100 text-center py-4 text-xs text-gray-500 mt-auto">&copy; 2026 Studora.</footer>
+    
+    <script>
+        lucide.createIcons();
+        function toggleModal(show) {
+            const modal = document.getElementById('editModal');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
