@@ -74,4 +74,3 @@ spring.jpa.show-sql=true
 ```text
 http://localhost:8080
 ```
-
