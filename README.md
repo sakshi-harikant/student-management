@@ -40,7 +40,7 @@ A simple and secure full-stack web application designed to manage student regist
 ### Dashboard
 ![Dashboard](screenshots/dash-board.png)
 
-### Student-Login
+### Student-DashBoard
 ![Stud-Login](screenshots/Student-Acc.png)
 
 
