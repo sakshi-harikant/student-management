@@ -56,7 +56,7 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 # Hibernate Properties
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
-
+```
 
 ### 4. Launch Application
 1. Import the project into **Eclipse** or **IntelliJ IDEA** as an **Existing Maven Project**.
