@@ -27,6 +27,22 @@ A simple and secure full-stack web application designed to manage student regist
 * **ORM:** Spring Data JPA (Hibernate)
 
 ---
+## Screenshots
+
+### Home Page
+
+![Home Page](screenshots/home-page.png)
+
+### Admin-Page
+
+![admin-page](screenshots/admin-page.png)
+
+### Dashboard
+![Dashboard](screenshots/dash-board.png)
+
+### Student-Login
+![Stud-Login](screenshots/Student-Acc.png)
+
 
 ## 🚀 How to Run the Project
 
